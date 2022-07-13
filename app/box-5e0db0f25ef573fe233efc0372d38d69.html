@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en"><script type="text/javascript">
+    var spector;
+    var captureOnLoad = false;
+    var captureOffScreen = false;
+    window.__SPECTOR_Canvases = [];
+
+    (function() {
+        var __SPECTOR_Origin_EXTENSION_GetContext = HTMLCanvasElement.prototype.getContext;
+        HTMLCanvasElement.prototype.__SPECTOR_Origin_EXTENSION_GetContext = __SPECTOR_Origin_EXTENSION_GetContext;
+
+        if (typeof OffscreenCanvas !== 'undefined') {
+            var __SPECTOR_Origin_EXTENSION_OffscreenGetContext = OffscreenCanvas.prototype.getContext;
+            OffscreenCanvas.prototype.__SPECTOR_Origin_EXTENSION_OffscreenGetContext = __SPECTOR_Origin_EXTENSION_OffscreenGetContext;
+
+            OffscreenCanvas.prototype.getContext = function () {
+                var context = null;
+                if (!arguments.length) {
+                    return context;
+                }
+    
+                if (arguments.length === 1) {
+                    context = this.__SPECTOR_Origin_EXTENSION_OffscreenGetContext(arguments[0]);
+                    if (context === null) {
+                        return context;
+                    }
+                }
+                else if (arguments.length === 2) {
+                    context = this.__SPECTOR_Origin_EXTENSION_OffscreenGetContext(arguments[0], arguments[1]);
+                    if (context === null) {
+                        return context;
+                    }
+                }
+    
+                var contextNames = ["webgl", "experimental-webgl", "webgl2", "experimental-webgl2"];
+                if (contextNames.indexOf(arguments[0]) !== -1) {
+                    // context.canvas.setAttribute("__spector_context_type", arguments[0]);
+                    // Notify the page a canvas is available.
+                    var myEvent = new CustomEvent("SpectorWebGLCanvasAvailableEvent");
+                    document.dispatchEvent(myEvent);
+                    this.id = "Offscreen";
+                    window.__SPECTOR_Canvases.push(this);
+    
+                    if (captureOnLoad) {
+                        // Ensures canvas is in the dom to capture the one we are currently tracking.
+                        if (false) {
+                            spector.captureContext(context, 500, false, false);
+                            captureOnLoad = false;
+                        }
+                    }
+                }
+    
+                return context;
+            }
+        }
+
+        HTMLCanvasElement.prototype.getContext = function () {
+            var context = null;
+            if (!arguments.length) {
+                return context;
+            }
+
+            if (arguments.length === 1) {
+                context = this.__SPECTOR_Origin_EXTENSION_GetContext(arguments[0]);
+                if (context === null) {
+                    return context;
+                }
+            }
+            else if (arguments.length === 2) {
+                context = this.__SPECTOR_Origin_EXTENSION_GetContext(arguments[0], arguments[1]);
+                if (context === null) {
+                    return context;
+                }
+            }
+
+            var contextNames = ["webgl", "experimental-webgl", "webgl2", "experimental-webgl2"];
+            if (contextNames.indexOf(arguments[0]) !== -1) {
+                context.canvas.setAttribute("__spector_context_type", arguments[0]);
+                // Notify the page a canvas is available.
+                var myEvent = new CustomEvent("SpectorWebGLCanvasAvailableEvent");
+                document.dispatchEvent(myEvent);
+
+                if (captureOffScreen) {
+                    var found = false;
+                    for (var i = 0; i < window.__SPECTOR_Canvases.length; i++) {
+                        if (window.__SPECTOR_Canvases[i] === this) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        window.__SPECTOR_Canvases.push(this);
+                    }
+                }
+
+                if (captureOnLoad) {
+                    // Ensures canvas is in the dom to capture the one we are currently tracking.
+                    if (this.parentElement || false) {
+                        spector.captureContext(context, 500, false, false);
+                        captureOnLoad = false;
+                    }
+                }
+            }
+
+            return context;
+        }
+    })()</script><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="UTF-8"></head><body><script>!function(e){var t={};function n(o){if(t[o])return t[o].exports;var r=t[o]={i:o,l:!1,exports:{}};return e[o].call(r.exports,r,r.exports,n),r.l=!0,r.exports}n.m=e,n.c=t,n.d=function(e,t,o){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:o})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var o=Object.create(null);if(n.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var r in e)n.d(o,r,function(t){return e[t]}.bind(null,r));return o},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="",n(n.s=358)}({358:function(e,t){!function(){var e;try{e={cookie:{get:function(e){var t=new RegExp("(?:^|; )"+e+"=([^;]*)").exec(document.cookie);return t?t[1]:void 0},set:function(e,t,n,o){document.cookie=function(e,t,n,o){return[e+"="+t,"path=/","expires="+n.toUTCString()].concat(o||[]).join("; ")}(e,t,n,o)},remove:function(e){document.cookie=e+"=; expires=Tue, 13 Mar 1979 00:00:00 UTC; path=/;"}}}}catch(e){return}var t={_hjOptOut:new function(t,n,o,r,i){this.parseCommand=function(a,c){var u,s,f,d=e[t],l=a.action,p=a.key,m=a.messageId,h=a.siteId,g=r?p:p+":"+h,v=a.value,y=a.expiresMinutes||1440*(a.expiresDays||365),j=((u=new Date).setTime(u.getTime()+60*y*1e3),u);if(!((s={_hjSet:o,_hjGet:n,_hjRemove:o}[l]||[]).indexOf("*")>=0||s.indexOf(c)>=0))throw new Error("Command "+l+" not allowed on key: "+p);switch(l){case"_hjSet":d.set(g,v,j,i);break;case"_hjGet":v=d.get(g),f=JSON.stringify({messageId:m,value:v||!1}),window.parent.postMessage(f,"*");break;case"_hjRemove":d.remove(g)}}}("cookie",["*"],["https://www.hotjar.com","https://local.hotjar.com","http://local.hotjar.com","https://insights-staging.hotjar.com","http://insights-staging.hotjar.com"],!0,["SameSite=None","Secure"])};function n(e){try{!function(e,n){e.key&&t[e.key]&&t[e.key].parseCommand(e,n)}(JSON.parse(e.data),e.origin)}catch(e){return null}}window.addEventListener?window.addEventListener("message",n,!1):window.attachEvent("onmessage",n)}()}});</script></body></html>
