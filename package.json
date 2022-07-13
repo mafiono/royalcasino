@@ -1,7 +1,7 @@
 {
-  "name": "angular-seed",
+  "name": "royalcasino",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "A starter project for AngularJS",
   "repository": "https://github.com/angular/angular-seed",
   "license": "MIT",
@@ -9,7 +9,8 @@
     "angular": "^1.7.5",
     "angular-loader": "^1.7.5",
     "angular-route": "^1.7.5",
-    "html5-boilerplate": "0.0.1"
+    "html5-boilerplate": "0.0.1",
+    "webpack": "^5.73.0"
   },
   "devDependencies": {
     "angular-mocks": "^1.7.5",
